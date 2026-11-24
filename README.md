@@ -1,41 +1,24 @@
-# 🚀 Kaggle Credit Card Fraud — Booster Benchmark
+# 🚀 Predicting Credit Card Fraud — Machine Learning Experiments
 
-A machine learning benchmarking experiment using the Kaggle Playground Series credit card fraud dataset. This project compares **XGBoost, LightGBM, and CatBoost** to evaluate predictive performance, training speed, and boosting iterations.
+A hands-on machine learning project using the Kaggle Playground Series credit card fraud dataset. This repository explores gradient boosting, model benchmarking, hyperparameter optimization, cross-validation, and model evaluation.
 
----
+## 🎯 Project Objectives
 
-## 🎯 Objective
-
-Benchmark three popular gradient boosting algorithms on a tabular binary classification task using a consistent train-validation split.
-
-The goal is to identify:
-- Which model achieves the best validation ROC-AUC?
-- Which model trains the fastest?
-- How do boosting iterations and training time compare?
-- Is the performance difference between models meaningful?
-
----
+- Compare popular gradient boosting algorithms.
+- Evaluate model performance using ROC-AUC.
+- Understand training time and early stopping.
+- Optimize CatBoost hyperparameters using Optuna.
+- Measure the difference between cross-validation and held-out test performance.
+- Understand model selection bias.
 
 ## 📊 Dataset
 
-**Competition:** Kaggle Playground Series — Season 6, Episode 11  
-**Task:** Binary Classification  
-**Target:** `is_fraud`  
-**Evaluation Metric:** ROC-AUC
+- **Competition:** Kaggle Playground Series — Season 6, Episode 11
+- **Task:** Binary Classification
+- **Target:** `is_fraud`
+- **Evaluation Metric:** ROC-AUC
 
-🔗 [Kaggle Competition — Predicting Credit Card Fraud](https://www.kaggle.com/competitions/playground-series-s6e11)
-
----
-
-## 🤖 Models Compared
-
-| Model | Description |
-|---|---|
-| CatBoost | Gradient boosting optimized for categorical features |
-| LightGBM | Efficient gradient boosting using histogram-based learning |
-| XGBoost | Regularized gradient boosting with optimized tree construction |
-
----
+[Kaggle Competition — Predicting Credit Card Fraud](https://www.kaggle.com/competitions/playground-series-s6e11)
 
 ## 🛠️ Tech Stack
 
@@ -43,31 +26,26 @@ The goal is to identify:
 - Pandas
 - NumPy
 - Scikit-learn
+- CatBoost
 - XGBoost
 - LightGBM
-- CatBoost
+- Optuna
 - Matplotlib
+- Jupyter Notebook
 
 ---
 
-## 🔬 Methodology
+## Experiment 1: Gradient Boosting Benchmark
 
-1. Load and inspect the competition dataset.
-2. Separate features and target variable.
-3. Perform an **80/20 stratified train-validation split**.
-4. Handle missing values and encode categorical features.
-5. Train all three boosting models using comparable settings.
-6. Use early stopping to determine the best boosting iteration.
-7. Evaluate models using validation ROC-AUC.
-8. Compare model performance, training time, and best iterations.
+Compared three gradient boosting algorithms using an 80/20 stratified train-validation split.
 
-**Random State:** 42  
-**Validation Strategy:** Stratified Holdout  
-**Early Stopping:** Enabled
+### Models
 
----
+- CatBoost
+- LightGBM
+- XGBoost
 
-## 📈 Benchmark Results
+### Benchmark Results
 
 | Rank | Model | Validation ROC-AUC | Best Iteration | Training Time (sec) |
 |---|---|---:|---:|---:|
@@ -75,45 +53,73 @@ The goal is to identify:
 | 🥈 2 | LightGBM | 0.943152 | 169 | **7.99** |
 | 🥉 3 | XGBoost | 0.942245 | 148 | 15.65 |
 
-### Performance Differences
+### Key Findings
 
-| Comparison | ROC-AUC Difference |
+- CatBoost achieved the highest validation ROC-AUC of **0.944426**.
+- LightGBM was the fastest, completing training in approximately **7.99 seconds**.
+- The differences between the three ROC-AUC scores were relatively small.
+- Additional validation would be needed to establish whether the performance differences are consistent.
+
+---
+
+## Experiment 2: CatBoost Hyperparameter Optimization with Optuna
+
+The second experiment focuses on optimizing CatBoost using Optuna.
+
+### Experimental Setup
+
+| Setting | Value |
+|---|---|
+| Final holdout test size | 20% |
+| Development data | 80% |
+| Cross-validation | 5-fold Stratified CV |
+| Optimization library | Optuna |
+| Number of trials | 40 |
+| Optimization objective | Maximize ROC-AUC |
+| Pruning | Median Pruner |
+| Early stopping | 100 rounds |
+
+### Hyperparameters Tuned
+
+- Learning rate
+- Tree depth
+- L2 leaf regularization
+- Random strength
+- Bagging temperature
+
+### Evaluation Strategy
+
+1. Reserve 20% of the original training data as a final test set.
+2. Use the remaining 80% for hyperparameter optimization.
+3. Run 5-fold stratified cross-validation for each Optuna trial.
+4. Apply early stopping and pruning during optimization.
+5. Record the best cross-validation ROC-AUC and parameters.
+6. Compare the default-parameter CV score against the optimized CV score.
+7. Refit the selected model on the development data.
+8. Evaluate the final model once on the untouched test set.
+
+### Optuna Results
+
+| Metric | Result |
 |---|---:|
-| CatBoost vs. LightGBM | 0.001274 |
-| CatBoost vs. XGBoost | 0.002181 |
-| LightGBM vs. XGBoost | 0.000907 |
+| Default CatBoost CV ROC-AUC | Pending |
+| Best Optuna CV ROC-AUC | Pending |
+| Final Test ROC-AUC | Pending |
+| CV - Test Gap | Pending |
 
----
+### Best Hyperparameters
 
-## 🏆 Key Findings
+Results will be added after completing the Optuna experiment.
 
-- **Best Model:** CatBoost achieved the highest validation ROC-AUC of **0.944426**.
-- **Fastest Model:** LightGBM completed training in approximately **7.99 seconds**.
-- **CatBoost:** Achieved the highest score but required approximately 24.14 seconds of training.
-- **LightGBM:** Delivered competitive performance while training approximately 3 times faster than CatBoost.
-- **XGBoost:** Achieved a ROC-AUC of 0.942245 with a training time of approximately 15.65 seconds.
+### Understanding Selection Bias
 
-The differences in ROC-AUC are relatively small. CatBoost performed best on this particular validation split, but additional cross-validation or repeated experiments would be needed to determine whether its advantage is consistent and statistically meaningful.
+The difference between the best cross-validation score and the final held-out test score is:
 
----
+**Selection gap = Best CV ROC-AUC − Final Test ROC-AUC**
 
-## 📉 Booster Comparison
+A positive gap means the selected model performed better during cross-validation than on the final test set.
 
-The benchmark shows that all three models achieve similar validation performance, with CatBoost slightly ahead.
-
-![Booster Comparison](booster_comparison.png)
-
----
-
-## 💡 What I Learned
-
-- How to benchmark multiple gradient boosting algorithms fairly.
-- How stratified train-validation splitting preserves class proportions.
-- How early stopping helps determine the optimal number of boosting iterations.
-- How to compare models using ROC-AUC.
-- How to evaluate the trade-off between predictive performance and computational efficiency.
-- Why small validation score differences should not automatically be considered meaningful.
-- Why repeated validation or cross-validation is important for reliable model selection.
+This gap provides an estimate of how much the model-selection process may have benefited from validation noise.
 
 ---
 
@@ -123,25 +129,37 @@ The benchmark shows that all three models achieve similar validation performance
 Predicting_Credit_Card_Fraud/
 │
 ├── Predicting_Credit_Card_Fraud.ipynb
+├── Optuna_hyperparameter_tuning.ipynb
 ├── README.md
 └── .gitignore
 ```
 
+## 💡 Key Learnings
+
+- Comparing gradient boosting algorithms.
+- Building stratified train-validation splits.
+- Understanding early stopping.
+- Using ROC-AUC for binary classification.
+- Hyperparameter optimization with Optuna.
+- Applying pruning to reduce unnecessary trial computation.
+- Using 5-fold stratified cross-validation.
+- Keeping a final test set separate from model selection.
+- Understanding the difference between validation performance and final test performance.
+- Recognizing potential selection bias.
+
+## 🔮 Future Improvements
+
+- Explore additional feature engineering.
+- Compare different boosting algorithms after optimization.
+- Analyze feature importance.
+- Experiment with different cross-validation strategies.
+- Generate Kaggle competition predictions.
+- Improve leaderboard performance.
+
 ---
 
-## 🔮 Next Steps
+## 👨‍💻 About This Project
 
-- Perform cross-validation to evaluate model stability.
-- Tune hyperparameters for the best-performing booster.
-- Explore feature engineering.
-- Compare validation results against the Kaggle leaderboard.
-- Generate predictions for the competition test set.
-- Prepare a submission and evaluate leaderboard performance.
-
----
-
-## 👨‍💻 Learning Journey
-
-This project is part of my hands-on Machine Learning practice, focusing on algorithm understanding, experimentation, model evaluation, and Kaggle competitions.
+This repository is part of my practical Machine Learning learning journey, focusing on implementing algorithms, conducting experiments, evaluating models, and developing skills through Kaggle competitions.
 
 **Learning by doing. Experimenting. Improving.** 🚀
