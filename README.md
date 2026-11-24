@@ -130,6 +130,7 @@ Predicting_Credit_Card_Fraud/
 │
 ├── Predicting_Credit_Card_Fraud.ipynb
 ├── Optuna_hyperparameter_tuning.ipynb
+|── xgboost_vs_lgb_vs_cat.png
 ├── README.md
 └── .gitignore
 ```
