@@ -178,9 +178,9 @@ Submission Status
 Item	Status
 submission.csv generated	Yes
 Submission validation	Passed
-Kaggle API authentication	Failed / not configured
-Submission uploaded to Kaggle	No
-Public leaderboard score	Not available
+Kaggle API authentication	Passed
+Submission uploaded to Kaggle	Yes
+Public leaderboard score	0.94709
 
 
 The Kaggle CLI returned an authentication message asking for API credentials. No public leaderboard score was obtained in this run.
